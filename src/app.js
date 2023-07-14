@@ -1,30 +1,24 @@
-const fs = require("fs");
 const express = require("express");
 const app = express();
-
-// Importing products from products.json file
-const products = JSON.parse(fs.readFileSync(`${__dirname}/data/products.json`));
-console.log(products);
-// Middlewares
-app.use(express.json());
-
-// Write GET endpoint for sending all the products to client here
-// Endpoint - /api/v1/products
+const products = require("./data/products.json");
 
 app.get("/api/v1/products", (req, res) => {
-  if (products) {
+  if (products.length > 0) {
     res.status(200).json({
       status: "success",
       message: "Product fetched successfully",
       data: {
-        product: products,
+        products: products,
       },
     });
   } else {
-    res.status(400).send({ message: "Product not found" });
+    res.status(404).json({ message: "Product not found" });
   }
 });
 
-module.exports = app;
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
+
 
 
